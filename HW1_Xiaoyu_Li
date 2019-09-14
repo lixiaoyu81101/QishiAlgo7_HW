@@ -1,0 +1,142 @@
+Q1: LC 744 Find Smallest Letter Greater Than Target
+class Solution:
+    def nextGreatestLetter(self, letters: List[str], target: str) -> str:
+        left, right = 0, len(letters)
+        while left < right:
+            mid = (left + right) // 2
+            if letters[mid] <= target:
+                left = mid + 1
+            else:
+                right = mid
+                
+        if left == len(letters):
+            return letters[0]
+        else:
+            return letters[left]
+    
+Q2: LC 475 Heaters
+class Solution:
+    def findRadius(self, houses: List[int], heaters: List[int]) -> int:
+        houses.sort()
+        num_houses = len(houses)
+        
+        heaters.sort()
+        num_heaters = len(heaters)
+        
+        
+        heater = 0
+        min_req_radius = 0
+        
+        for i in range(num_houses):
+            radius = abs(heaters[heater] - houses[i])
+            while heater < num_heaters - 1 and houses[i] > (heaters[heater] + heaters[heater+1]) //2 : 
+                heater += 1
+            
+            min_req_radius = max(min_req_radius, abs(heaters[heater] - houses[i]))
+            
+        return min_req_radius
+            
+Q3: LC Search a 2D Matrix
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        if target < matrix[0][0] or target > matrix[-1][-1]:
+            return False
+        
+        for row in range(len(matrix)):
+            if matrix[row][0] <= target & matrix[row][- 1] >= target:
+                return self.binarySearch(matrix[row], target)
+        
+        return False
+
+    def binarySearch(self, row, target):
+        left, right = 0, len(row)
+        while left <= right:
+            mid = left + (right-left)//2;
+            value = row[mid]
+
+            if value == target:
+                return True
+            elif value < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        return False
+    
+Q4: LC 34 Find First and Last Position of Element in Sorted Array
+class Solution:
+    def searchRange(self, nums: 'List[int]', target: 'int') -> 'List[int]':
+        left, right = 0, len(nums) - 1
+        
+        # find the left index first
+        while left <= right:
+            mid = (left + right) // 2
+            
+            if nums[mid] >= target:
+                right = mid - 1
+            else:
+                left = mid + 1
+                            
+        if left == len(nums) or nums[left] != target:
+            return [-1, -1]
+            
+        # reset left and right indices
+        left2, right2 = left, len(nums) - 1
+        
+        # find the right index afterwards
+        while left2 <= right2:
+            mid2 = (left2 + right2) // 2
+        
+            if nums[mid2] <= target:
+                left2 = mid2 + 1
+            else:
+                right2 = mid2 - 1
+        
+        return [left, right2]
+
+
+Q5 LC 719 Find K-th Smallest Pair Distance
+class Solution:
+    def countPairs(self, nums, target):
+        left, right = 0, 1
+        total = 0
+        count = left = 0
+        for i in range(len(nums)):
+            while nums[i] - nums[left] > target and left < i:
+                left += 1
+            count += i - left
+            # if count > k:
+            #     break
+        return count
+        
+    def smallestDistancePair(self, nums: List[int], k: int) -> int: 
+        nums.sort()
+        left, right = 0, nums[-1] - nums[0]
+        while left < right + 1:
+            mid = (left + right)//2
+            if self.countPairs(nums, mid) < k:
+                left = mid + 1
+            else:
+                right = mid - 1
+        
+        return left
+
+Q6: Google
+def minmaxGasDist(stations, K):
+    left, right = 0, stations[-1] - stations[0]
+    while (left + 10e-6 < right):
+        mid = (left + right) / 2
+        count = 0
+        
+        for i in range(len(stations) - 1):
+            count += (stations[i + 1] - stations[i]) // mid 
+        
+        if count > K:
+            left = mid
+        else:
+            right = mid
+            
+    return right      
+
+st= [5,8,10,25,28,31,72,80,85,100]
+K = 8
+print(minmaxGasDist(st,K))
